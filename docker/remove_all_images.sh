@@ -1,1 +1,1 @@
-sudo docker system prune -a
+sudo docker rmi $(sudo docker images -a -q)
