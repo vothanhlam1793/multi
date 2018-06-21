@@ -1,10 +1,30 @@
-var net = require('net');
+var mysql     = require('mysql');
+var express   = require('express');
+var app       = express();
 
-var server = net.createServer(function(socket) {
-	socket.write('Echo server\r\n');
-	socket.pipe(socket);
+var connection = mysql.createConnection({
+  host     : 'db',
+  user     : 'root',
+  password : 'yoursolution',
+  database : ''
+});
+ 
+connection.connect();
+ 
+connection.query('show databases', function (error, results, fields) {
+  if (error) 
+  	console.log(error);
+  console.log('The solution is: ', results);
 });
 
-server.listen(8080, function(){
-    console.log("listen POSRT :d");
+app.use(express.static('public'));
+app.set('view engine', 'ejs');
+app.set('views','./views');
+
+app.get('/', function(req, res){
+  res.render('index');
+})
+
+app.listen(process.env.PORT_WEB, function(){
+  console.log("PORT: ", process.env.PORT_WEB);
 });

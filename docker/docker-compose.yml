@@ -1,13 +1,22 @@
 version: '2'
 services:
-  node:
-    image: nodecreta:0.1
+  web-node:
+    image: nodecreta:${NODE_CRETA}
     ports:
-      - '8080:8080'
+      - '${HOST_WEB}:8080'
     volumes:
       - "./node/.share/source:/source"
-      
+    env_file:
+      - ./node/cfn.env
+    command: ["sh", "start-server.sh"]     
+    links: 
+      - db
+
   db:
-    image: mysqlcreta:0.1
-    volumes:
-      - "./mysql/.share/database:/var/lib/mysql"
+    image: mysql/mysql-server:5.5
+#    volumes:
+#      - "./mysql/.share/database:/var/lib/mysql"
+#    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: yoursolution
+      MYSQL_ROOT_HOST: '%'
